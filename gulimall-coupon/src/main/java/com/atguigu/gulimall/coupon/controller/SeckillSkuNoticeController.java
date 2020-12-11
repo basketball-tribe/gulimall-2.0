@@ -22,7 +22,7 @@ import com.atguigu.gulimall.common.utils.R;
  *
  * @author fengjc
  * @email fengjc@mail.com
- * @date 2020-12-10 18:46:23
+ * @date 2020-12-11 17:38:45
  */
 @RestController
 @RequestMapping("coupon/seckillskunotice")

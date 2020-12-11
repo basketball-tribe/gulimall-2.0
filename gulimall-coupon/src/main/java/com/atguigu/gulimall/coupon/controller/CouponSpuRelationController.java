@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,23 +22,14 @@ import com.atguigu.gulimall.common.utils.R;
  *
  * @author fengjc
  * @email fengjc@mail.com
- * @date 2020-12-10 18:46:23
+ * @date 2020-12-11 17:38:45
  */
 @RestController
 @RequestMapping("coupon/couponspurelation")
 public class CouponSpuRelationController {
     @Autowired
     private CouponSpuRelationService couponSpuRelationService;
-    @Value("${server.port}")
-    private String name;
-    @RequestMapping("/test")
-    public R getAll(){
-        CouponSpuRelationEntity couponSpuRelation =new CouponSpuRelationEntity();
-        couponSpuRelation.setSpuName("张三"+name);
-        couponSpuRelation.setCouponId(10l);
-        couponSpuRelation.setSpuId(20l);
-        return R.ok().put("couponAll",couponSpuRelation);
-    }
+
     /**
      * 列表
      */

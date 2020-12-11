@@ -21,11 +21,11 @@ import com.atguigu.gulimall.common.utils.R;
  * 商品属性
  *
  * @author fengjc
- * @email gulimall@qq.com
- * @date 2020-12-10 13:13:40
+ * @email fengjc@mail.com
+ * @date 2020-12-11 17:33:50
  */
 @RestController
-@RequestMapping("/attr")
+@RequestMapping("product/attr")
 public class AttrController {
     @Autowired
     private AttrService attrService;
@@ -56,8 +56,6 @@ public class AttrController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody AttrEntity attr){
-        attr.setAttrName("张三");
-        attr.setAttrType(1);
 		attrService.save(attr);
 
         return R.ok();
