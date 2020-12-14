@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.atguigu.gulimall.common.utils.PageUtils;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,17 @@ import java.util.Map;
 public interface CategoryService extends IService<CategoryEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 以tree形式查询商品
+     * @return
+     */
+    List<CategoryEntity> listWithTree();
+
+    /**
+     * 逻辑删除
+     * @param asList
+     */
+    void removeMenuByIds(List<Long> asList);
 }
 
