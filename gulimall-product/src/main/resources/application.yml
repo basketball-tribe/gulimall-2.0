@@ -10,7 +10,9 @@ spring:
         server-addr: 123.56.152.42:8848
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-
+  redis:
+    host: 123.56.152.42
+    port: 6379
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
