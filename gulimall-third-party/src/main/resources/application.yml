@@ -12,6 +12,8 @@ spring:
 
   application:
     name: gulimall-third-party
-
+  redis:
+    host: 123.56.152.42
+    port: 6379
 server:
   port: 3300

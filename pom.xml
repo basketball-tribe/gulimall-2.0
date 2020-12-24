@@ -10,6 +10,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>gulimall</name>
     <description>聚合服务</description>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
     <modules>
         <module>gulimall-coupon</module>
         <module>gulimall-common</module>
@@ -21,6 +24,7 @@
         <module>gulimall-third-party</module>
         <module>renren-fast</module>
         <module>renren-generator-test</module>
+        <module>gulimall-auth-server</module>
 
     </modules>
 

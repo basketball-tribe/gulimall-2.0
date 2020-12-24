@@ -16,11 +16,15 @@ import java.util.Map;
 
 /**
  * @ClassName OssController
- * @Description: TODO
+ * @Description: oss上传
  * @Author fengjc
  * @Date 2020/12/15
  * @Version V1.0
  **/
+
+/**
+ * 前端从后端获取到签名之后直接上传
+ */
 @RestController
 public class OssController {
     @Autowired
