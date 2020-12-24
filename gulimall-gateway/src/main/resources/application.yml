@@ -2,16 +2,19 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: test_route
-          uri: https://www.baidu.com
-          predicates:
-            - Query=url,baidu
+#        #测试网关开始
+#        - id: test_route
+#          uri: https://www.baidu.com
+#          predicates:
+#            - Query=url,baidu
+#
+#        - id: qq_route
+#          uri: https://localhost:8000/member/member/testFeign
+#          predicates:
+#            - Query=url,qq
+#        #测试网关结束
 
-        - id: qq_route
-          uri: https://localhost:8000/member/member/testFeign
-          predicates:
-            - Query=url,qq
-
+        #将路径为Path=/api/product转发gulimall-product微服务
         - id: product_route
           uri: lb://gulimall-product
           predicates:
@@ -19,27 +22,37 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        #将路径为Path=/api/thirdparty/**转发至第三方服务模块
         - id: third_party_route
           uri: lb://gulimall-third-party
           predicates:
             - Path=/api/thirdparty/**
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
-
+        #将路径为Path=/api/member/**转发至会员服务
         - id: member_route
           uri: lb://gulimall-member
           predicates:
             - Path=/api/member/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-
+        #将路径为Path=/api/ware/**转发至仓库服务
         - id: ware_route
           uri: lb://gulimall-ware
           predicates:
             - Path=/api/ware/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-#
+
+        #将路径为Path=/api/coupon/**转发至优惠服务
+        - id: gulimall-coupon
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*),/$\{segment}
+
+        #将路径为Path=/api/**转发至后台管理
         - id: admin_route
           uri: lb://renren-fast
           predicates:
@@ -48,7 +61,17 @@ spring:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
 
 
+          #将域名为auth.gulimall.com转发至gulimall-auth
+        - id: gulimall_auth_host
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.gulimall.com
 
+        #将域名为`**.gulimall.com`转发至商品服务
+        - id: admin_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=**.gulimall.com
   ## 前端项目，/api
 ## http://localhost:88/api/captcha.jpg   http://localhost:8080/renren-fast/captcha.jpg
 ## http://localhost:88/api/product/category/list/tree http://localhost:10000/product/category/list/tree
