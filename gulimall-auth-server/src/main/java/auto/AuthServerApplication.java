@@ -6,14 +6,14 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableFeignClients
-public class GulimallAuthServerApplication {
+public class AuthServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GulimallAuthServerApplication.class, args);
+        SpringApplication.run(AuthServerApplication.class, args);
     }
 
 }

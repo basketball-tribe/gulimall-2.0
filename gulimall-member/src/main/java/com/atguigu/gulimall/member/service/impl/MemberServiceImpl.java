@@ -1,15 +1,22 @@
 package com.atguigu.gulimall.member.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.atguigu.gulimall.common.utils.HttpUtils;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.exception.PhoneNumExistException;
 import com.atguigu.gulimall.member.exception.UserExistException;
 import com.atguigu.gulimall.member.service.MemberLevelService;
 import com.atguigu.gulimall.member.vo.MemberRegisterVo;
+import com.atguigu.gulimall.member.vo.SocialUser;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -61,6 +68,52 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         entity.setLevelId(defaultLevel.getId());
         // 4 保存用户信息
         this.save(entity);
+    }
+    /**
+     *第三方微博登录
+     * @param socialUser
+     * @return
+     */
+    @Override
+    public MemberEntity login(SocialUser socialUser) {
+        MemberEntity user =this.getOne(new QueryWrapper<MemberEntity>().eq("uid",socialUser.getUid()));
+        //1 如果之前未登陆过，则查询其社交信息进行注册
+        if(user == null){
+            Map<String,String> query =new HashMap<>();
+            query.put("access_token",socialUser.getAccess_token());
+            query.put("uid",socialUser.getUid());
+            //调用微博api接口获取用户信息
+            String json =null;
+            try {
+                HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<>(), query);
+                json = EntityUtils.toString(response.getEntity());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            JSONObject jsonObject=JSON.parseObject(json);
+            //获得昵称，性别，头像
+            String name =jsonObject.getString("name");
+            String gender = jsonObject.getString("gender");
+            String profile_image_url = jsonObject.getString("profile_image_url");
+            //封装用户信息并保存
+            user=new MemberEntity();
+            MemberLevelEntity defaultLevel = memberLevelService.getOne(new QueryWrapper<MemberLevelEntity>().eq("default_status", 1));
+            user.setLevelId(defaultLevel.getId());
+            user.setNickname(name);
+            user.setGender("m".equals(gender)?0:1);
+            user.setHeader(profile_image_url);
+            user.setAccessToken(socialUser.getAccess_token());
+            user.setUid(socialUser.getUid());
+            user.setExpiresIn(socialUser.getExpires_in());
+            this.save(user);
+        }else {
+            //2 否则更新令牌等信息并返回
+            user.setAccessToken(socialUser.getAccess_token());
+            user.setUid(socialUser.getUid());
+            user.setExpiresIn(socialUser.getExpires_in());
+            this.updateById(user);
+        }
+        return null;
     }
 
     /**
