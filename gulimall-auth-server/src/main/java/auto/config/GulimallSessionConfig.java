@@ -9,7 +9,10 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 @Configuration
 public class GulimallSessionConfig {
-
+    /**
+     * 由于默认使用jdk进行序列化，通过导入RedisSerializer修改为json序列化
+     * @return
+     */
     @Bean
     public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
         return new GenericJackson2JsonRedisSerializer();

@@ -11,7 +11,9 @@ import java.util.Date;
 public class MemberResponseVo implements Serializable {
 
     private static final long serialVersionUID = 5573669251256409786L;
-
+    /**
+     * 会员id
+     */
     private Long id;
     /**
      * 会员等级id
