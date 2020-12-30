@@ -1,5 +1,7 @@
 package com.atguigu.gulimall.order.service.impl;
 
+import com.atguigu.gulimall.common.to.mq.SeckillOrderTo;
+import com.atguigu.gulimall.order.vo.*;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,6 +26,51 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 订单获取数据
+      * @return
+     */
+    @Override
+    public OrderConfirmVo confirmOrder() {
+
+        return null;
+    }
+
+    @Override
+    public SubmitOrderResponseVo submitOrder(OrderSubmitVo submitVo) {
+        return null;
+    }
+
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        return null;
+    }
+
+    @Override
+    public void closeOrder(OrderEntity orderEntity) {
+
+    }
+
+    @Override
+    public PageUtils getMemberOrderPage(Map<String, Object> params) {
+        return null;
+    }
+
+    @Override
+    public PayVo getOrderPay(String orderSn) {
+        return null;
+    }
+
+    @Override
+    public void handlerPayResult(PayAsyncVo payAsyncVo) {
+
+    }
+
+    @Override
+    public void createSeckillOrder(SeckillOrderTo orderTo) {
+
     }
 
 }

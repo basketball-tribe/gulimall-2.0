@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 /**
  * @ClassName CartController
@@ -105,5 +108,15 @@ public class CartController {
     public String deleteItemAll(@RequestParam("skuId") Long skuId) {
         cartService.deleteItemAll();
         return "redirect:http://cart.gulimall.com/cart.html";
+    }
+
+    /**
+     * 给订单服务提供查询选中的购物车商品接口
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getCheckedItems")
+    public List<CartItemVo> getCheckedItems() {
+        return cartService.getCheckedItems();
     }
 }
