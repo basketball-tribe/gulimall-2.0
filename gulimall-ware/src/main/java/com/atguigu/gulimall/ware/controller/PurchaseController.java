@@ -3,6 +3,8 @@ package com.atguigu.gulimall.ware.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.atguigu.gulimall.ware.service.WareInfoService;
+import com.atguigu.gulimall.ware.vo.FareVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +31,18 @@ import com.atguigu.gulimall.common.utils.R;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+    @Autowired
+    private WareInfoService wareInfoService;
 
+    /**
+     * 运费收件信息获取
+     * @param addrId
+     * @return
+     */
+    @RequestMapping("/fare/{addrId}")
+    public FareVo getFare(@PathVariable("addrId") Long addrId) {
+        return wareInfoService.getFare(addrId);
+    }
     /**
      * 列表
      */

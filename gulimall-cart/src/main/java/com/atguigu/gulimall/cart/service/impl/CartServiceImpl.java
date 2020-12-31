@@ -200,7 +200,7 @@ public class CartServiceImpl implements CartService {
 
     }
     /**
-     * 购物车全选
+     * 选中的购物车信息
      * @return
      */
     @Override
