@@ -5,16 +5,19 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
 
 /**
  * 库存工作单
- * 
+ *
  * @author fengjc
  * @email fengjc@mail.com
  * @date 2020-12-10 18:40:41
  */
 @Data
+@Builder
 @TableName("wms_ware_order_task_detail")
 public class WareOrderTaskDetailEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -41,4 +44,12 @@ public class WareOrderTaskDetailEntity implements Serializable {
 	 */
 	private Long taskId;
 
+	/**
+	 * 仓库id
+	 */
+	private Long wareId;
+	/**
+	 * 锁定状态
+	 */
+	private Integer lockStatus;
 }

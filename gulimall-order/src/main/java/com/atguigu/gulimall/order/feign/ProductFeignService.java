@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient("gulimall-product")
 public interface ProductFeignService {
+    /**
+     * 远程查询商品信息
+     * @param skuId
+     * @return
+     */
     @RequestMapping("product/spuinfo/skuId/{skuId}")
     R getSpuBySkuId(@PathVariable("skuId") Long skuId);
 

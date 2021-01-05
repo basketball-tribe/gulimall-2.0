@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.atguigu.gulimall.common.excetion.NoStockException;
 import com.atguigu.gulimall.common.to.mq.SkuHasStockVo;
+import com.atguigu.gulimall.common.utils.BizCodeEnum;
+import com.atguigu.gulimall.ware.vo.WareSkuLockVo;
+import org.bouncycastle.x509.NoSuchStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +35,30 @@ import com.atguigu.gulimall.common.utils.R;
 public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
+    /**
+     * 根据商品id查询库存信息 为远程服务提供接口
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/getSkuHasStocks")
+    public List<SkuHasStockVo> getSkuHasStocks(@RequestBody List<Long> ids) {
+        return wareSkuService.getSkuHasStocks(ids);
+    }
 
+    /**
+     * 下单时锁库存
+     * @param lockVo
+     * @return
+     */
+    @RequestMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo lockVo) {
+        try {
+            Boolean lock = wareSkuService.orderLockStock(lockVo);
+            return R.ok();
+        }catch (NoStockException e){
+            return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
+    }
     /**
      * 列表
      */
@@ -83,13 +110,5 @@ public class WareSkuController {
         return R.ok();
     }
 
-    /**
-     * 根据商品id查询库存信息 为远程服务提供接口
-     * @param ids
-     * @return
-     */
-    @RequestMapping("/getSkuHasStocks")
-    public List<SkuHasStockVo> getSkuHasStocks(@RequestBody List<Long> ids) {
-        return wareSkuService.getSkuHasStocks(ids);
-    }
+
 }

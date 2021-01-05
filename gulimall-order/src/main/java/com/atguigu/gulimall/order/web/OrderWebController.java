@@ -64,6 +64,8 @@ public class OrderWebController {
                     case 2:
                         msg += "商品价格发生变化";
                         break;
+                    default:
+                        break;
                 }
                 attributes.addFlashAttribute("msg", msg);
                 //下单失败后重定向至确认页

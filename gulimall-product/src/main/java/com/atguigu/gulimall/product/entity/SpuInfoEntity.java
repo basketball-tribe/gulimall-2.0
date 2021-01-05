@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -10,7 +11,7 @@ import lombok.Data;
 
 /**
  * spu信息
- * 
+ *
  * @author fengjc
  * @email fengjc@mail.com
  * @date 2020-12-11 17:33:50
@@ -42,7 +43,12 @@ public class SpuInfoEntity implements Serializable {
 	 */
 	private Long brandId;
 	/**
-	 * 
+	 * 品牌名称
+	 */
+	@TableField(exist = false)
+	private String brandName;
+	/**
+	 *
 	 */
 	private BigDecimal weight;
 	/**
@@ -50,11 +56,11 @@ public class SpuInfoEntity implements Serializable {
 	 */
 	private Integer publishStatus;
 	/**
-	 * 
+	 *
 	 */
 	private Date createTime;
 	/**
-	 * 
+	 *
 	 */
 	private Date updateTime;
 
