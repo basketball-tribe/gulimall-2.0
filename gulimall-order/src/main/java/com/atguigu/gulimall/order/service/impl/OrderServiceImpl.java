@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.order.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.gulimall.common.constant.CartConstant;
 import com.atguigu.gulimall.common.to.mq.SeckillOrderTo;
 import com.atguigu.gulimall.common.to.mq.SkuHasStockVo;
 import com.atguigu.gulimall.common.utils.R;
@@ -22,6 +23,7 @@ import com.atguigu.gulimall.order.vo.*;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -184,9 +186,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                     responseVo.setCode(0);
                     responseVo.setOrder(order.getOrder());
                     //5.2.1发送消息到订单延迟队列,判断过期时间
-                    rabbitTemplate.convertAndSend("order-event-exchange","order.create.order",order.getOrder());
+                    /**
+                     *  将消息通过交换机order-event-exchange 使用路由键order.create.order发送到延迟队列order.delay.queue中
+                     *  在MyRabbitConfig中定义好了
+                     */
+                    rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
                     //5.2.2清除购物车记录
-
+                    BoundHashOperations<String, Object, Object> ops = redisTemplate.boundHashOps(CartConstant.CART_PREFIX + memberResponseVo.getId());
+                    for (OrderItemEntity orderItemEntity : order.getOrderItems()) {
+                        ops.delete(orderItemEntity.getSkuId().toString());
+                    }
+                    return responseVo;
                 } else {
                     //5.3锁定库存失败,返回错误信息
                     String msg = (String) r.get("msg");
@@ -199,9 +209,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             }
 
         }
-
-
-        return null;
     }
 
     /**
