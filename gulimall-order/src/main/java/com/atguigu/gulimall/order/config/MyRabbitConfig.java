@@ -107,4 +107,12 @@ public class MyRabbitConfig {
                 "order-event-exchange",
                 "order.release.order",null);
     }
+    @Bean
+    public Binding orderReleaseOrderBinding(){
+        return  new Binding("stock.release.stock.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.release.other.#",
+                null);
+    }
 }

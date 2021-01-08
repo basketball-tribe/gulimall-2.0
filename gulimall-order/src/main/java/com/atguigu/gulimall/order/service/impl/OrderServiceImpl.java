@@ -2,6 +2,7 @@ package com.atguigu.gulimall.order.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.atguigu.gulimall.common.constant.CartConstant;
+import com.atguigu.gulimall.common.to.mq.OrderTo;
 import com.atguigu.gulimall.common.to.mq.SeckillOrderTo;
 import com.atguigu.gulimall.common.to.mq.SkuHasStockVo;
 import com.atguigu.gulimall.common.utils.R;
@@ -22,6 +23,7 @@ import com.atguigu.gulimall.order.to.SpuInfoTo;
 import com.atguigu.gulimall.order.vo.*;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -185,10 +187,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 if (r.getCode() == 0) {
                     responseVo.setCode(0);
                     responseVo.setOrder(order.getOrder());
-                    //5.2.1发送消息到订单延迟队列,判断过期时间
+                    //5.2.1发送消息到订单延迟队列,判断订单过期后库存是否需要解库存
                     /**
-                     *  将消息通过交换机order-event-exchange 使用路由键order.create.order发送到延迟队列order.delay.queue中
-                     *  在MyRabbitConfig中定义好了
+                     * 此处发送延迟队列是为了订单结束之后验证订单信息解库存
+                     * 将消息通过交换机order-event-exchange 使用路由键order.create.order发送到延迟队列order.delay.queue中
+                     *  在MyRabbitConfig中定义好了 实现在 监听队列order.release.order.queue的接口中
                      */
                     rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
                     //5.2.2清除购物车记录
@@ -382,12 +385,32 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Override
     public OrderEntity getOrderByOrderSn(String orderSn) {
-        return null;
+        OrderEntity order_sn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+        return order_sn;
     }
 
+    /**
+     *关闭过期的的订单
+     * @param orderEntity
+     */
     @Override
     public void closeOrder(OrderEntity orderEntity) {
-
+        //判断订单最新状态 若订单不存在，订单被退回 则解锁库存 其他情况不处理库存
+        //因为消息发送过来的订单已经是很久前的了，中间可能被改动，因此要查询最新的订单
+        OrderEntity newOrderEntity = this.getById(orderEntity.getOrderSn());
+        //如果订单还处于新创建的状态，说明超时未支付，进行关单
+        if(OrderStatusEnum.CREATE_NEW.getCode().equals(newOrderEntity.getStatus())){
+            //修改订单状态为已取消
+            OrderEntity updateOrder = new OrderEntity();
+            updateOrder.setId(newOrderEntity.getId());
+            updateOrder.setStatus(OrderStatusEnum.CANCLED.getCode());
+            this.updateById(updateOrder);
+            //关单后发送消息通知其他服务进行关单相关的操作，如解锁库存
+            //实现在监听
+            OrderTo orderTo = new OrderTo();
+            BeanUtils.copyProperties(newOrderEntity,orderTo);
+            rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other",orderTo);
+        }
     }
 
     @Override
