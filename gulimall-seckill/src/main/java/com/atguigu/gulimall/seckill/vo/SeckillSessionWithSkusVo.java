@@ -31,7 +31,9 @@ public class SeckillSessionWithSkusVo {
      * 创建时间
      */
     private Date createTime;
-
+    /**
+     * 商品信息
+     */
     private List<SeckillSkuVo> relations;
 
 }
