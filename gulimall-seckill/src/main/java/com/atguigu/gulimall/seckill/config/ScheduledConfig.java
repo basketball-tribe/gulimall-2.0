@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @ClassName ScheduledConfig
- * @Description: TODO
+ * @Description: 定时器
  * @Author fengjc
  * @Date 2021/1/11
  * @Version V1.0

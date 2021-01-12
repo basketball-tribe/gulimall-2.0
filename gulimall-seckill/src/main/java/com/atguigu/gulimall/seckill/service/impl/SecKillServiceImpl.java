@@ -2,6 +2,7 @@ package com.atguigu.gulimall.seckill.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.gulimall.common.to.mq.SeckillOrderTo;
 import com.atguigu.gulimall.common.utils.R;
 import com.atguigu.gulimall.common.vo.MemberResponseVo;
 import com.atguigu.gulimall.seckill.feign.CouponFeignService;
@@ -14,6 +15,7 @@ import com.atguigu.gulimall.seckill.vo.SkuInfoVo;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -43,6 +45,9 @@ public class SecKillServiceImpl implements SecKillService {
     private RedissonClient redissonClient;
     @Autowired
     private ProductFeignService productFeignService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /*秒杀的场次信息*/
     //K: SESSION_CACHE_PREFIX + startTime + "_" + endTime
     //V: sessionId+"-"+skuId的List
@@ -186,9 +191,21 @@ public class SecKillServiceImpl implements SecKillService {
                                 //5. 发送消息创建订单
                                 //5.1 创建订单号
                                 orderSn = IdWorker.getTimeId();
-
+                                //5.2创建秒杀顶大to
+                                SeckillOrderTo orderTo = new SeckillOrderTo();
+                                orderTo.setOrderSn(orderSn);
+                                orderTo.setPromotionSessionId(redisTo.getPromotionSessionId());
+                                orderTo.setSkuId(redisTo.getSkuId());
+                                orderTo.setSeckillPrice(redisTo.getSeckillPrice());
+                                orderTo.setNum(num);
+                                orderTo.setMemberId(memberResponseVo.getId());
+                                //5.3发送创建订单消息
+                                //此处为了快速响应服务器采用消息推送的方式来创建订单详情，处理高并发
+                                rabbitTemplate.convertAndSend("order-event-exchange","order.seckill.order",orderTo);
+                                return orderSn;
                             }
                         }
+
                     }
                 }
             }
