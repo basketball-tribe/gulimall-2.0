@@ -47,6 +47,7 @@ import com.atguigu.gulimall.common.utils.Query;
 import com.atguigu.gulimall.order.dao.OrderDao;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.service.OrderService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -427,10 +428,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     public void handlerPayResult(PayAsyncVo payAsyncVo) {
 
     }
-
+    @Transactional(timeout = 20, rollbackFor = Exception.class)
     @Override
     public void createSeckillOrder(SeckillOrderTo orderTo) {
-
+        //获取用户信息
+        MemberResponseVo memberResponseVo = LoginInterceptor.loginLocal.get();
+        //1.创建订单
+        OrderEntity orderEntity =new OrderEntity();
+        orderEntity.setOrderSn(orderTo.getOrderSn());
+        orderEntity.setMemberId(orderTo.getMemberId());
+        if (memberResponseVo!=null){
+            orderEntity.setMemberUsername(memberResponseVo.getUsername());
+        }
+        orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+        orderEntity.setCreateTime(new Date());
+        orderEntity.setPayAmount(orderTo.getSeckillPrice().multiply(new BigDecimal(orderTo.getNum())));
+        this.save(orderEntity);
+        //2.创建订单项
+        R r = productFeignService.info(orderTo.getSkuId());
+        if (r.getCode() == 0) {
+            SeckillSkuInfoVo skuInfo = r.getData("skuInfo", new TypeReference<SeckillSkuInfoVo>() {
+            });
+            OrderItemEntity orderItemEntity = new OrderItemEntity();
+            orderItemEntity.setOrderSn(orderTo.getOrderSn());
+            orderItemEntity.setSpuId(skuInfo.getSpuId());
+            orderItemEntity.setCategoryId(skuInfo.getCatalogId());
+            orderItemEntity.setSkuId(skuInfo.getSkuId());
+            orderItemEntity.setSkuName(skuInfo.getSkuName());
+            orderItemEntity.setSkuPic(skuInfo.getSkuDefaultImg());
+            orderItemEntity.setSkuPrice(skuInfo.getPrice());
+            orderItemEntity.setSkuQuantity(orderTo.getNum());
+            orderItemService.save(orderItemEntity);
+        }
     }
 
     public static void main(String[] args) {

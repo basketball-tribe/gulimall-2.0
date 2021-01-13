@@ -115,4 +115,12 @@ public class MyRabbitConfig {
                 "order.release.other.#",
                 null);
     }
+    @Bean
+    public Binding orderSecKillOrrderQueueBinding(){
+        return new Binding("order.seckill.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.seckill.order",
+                null);
+    }
 }
