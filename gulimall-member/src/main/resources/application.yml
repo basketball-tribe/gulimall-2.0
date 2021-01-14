@@ -1,4 +1,17 @@
 spring:
+  zipkin:
+    base-url: http://123.56.152.42:9411
+    sender:
+      type: web
+    discovery-client-enabled: false
+  #采样取值介于 0到1之间，1则表示全部收集
+  sleuth:
+    sampler:
+      probability: 1
+  sentinel:
+    transport:
+      dashboard: localhost:8100
+
   datasource:
     username: root
     password: 123456
@@ -19,3 +32,9 @@ mybatis-plus:
       id-type: auto
 server:
   port: 8000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

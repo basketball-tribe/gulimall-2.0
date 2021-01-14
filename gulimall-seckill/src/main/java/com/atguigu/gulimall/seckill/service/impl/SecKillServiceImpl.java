@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  * @Date 2021/1/11
  * @Version V1.0
  **/
+@Service
 public class SecKillServiceImpl implements SecKillService {
     @Autowired
     private CouponFeignService couponFeignService;

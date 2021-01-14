@@ -21,6 +21,7 @@ import java.util.List;
  * @Version V1.0
  **/
 @Controller
+
 public class SecKillController {
     @Autowired
     private SecKillService secKillService;
