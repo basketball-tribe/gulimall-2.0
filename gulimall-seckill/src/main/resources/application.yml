@@ -37,5 +37,8 @@ management:
 
 server:
   port: 15000
-
+#        默认情况下，sentinel是不会对feign进行监控的，需要开启配置
+feign:
+  sentinel:
+    enabled: true
 
