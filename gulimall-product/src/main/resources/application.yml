@@ -40,6 +40,12 @@ server:
 logging:
   level:
     com.atguigu.gulimall: debug
+# 自定义线程池参数
+gulimall:
+  thread:
+    corePoolSize: 10
+    maxPoolSize: 20
+    keepAliveTime: 300
 management:
   endpoints:
     web:
