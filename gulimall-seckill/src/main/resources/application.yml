@@ -16,12 +16,12 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: #nacos注册中心地址
+        server-addr: 123.56.152.42:8848
     sentinel:
       transport:
         dashboard: localhost:8100
   zipkin:
-    base-url: http://http://123.56.152.42:9411
+    base-url: http://123.56.152.42:9411
     sender:
       type: web
     discovery-client-enabled: false

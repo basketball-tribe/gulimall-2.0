@@ -1,3 +1,9 @@
+server:
+  port: 20000
+  servlet:
+    session:
+      timeout: 30m
+
 spring:
   zipkin:
     base-url: http://123.56.152.42:9411
@@ -8,25 +14,21 @@ spring:
   sleuth:
     sampler:
       probability: 1
-  sentinel:
-    transport:
-      dashboard: localhost:8100
   application:
     name: gulimall-auth-server
   cloud:
     nacos:
       discovery:
         server-addr: 123.56.152.42:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8100
   redis:
     host: 123.56.152.42
     port: 6379
   session:
     store-type: redis
-server:
-  port: 20000
-  servlet:
-    session:
-      timeout: 30m
+
 
 management:
   endpoints:

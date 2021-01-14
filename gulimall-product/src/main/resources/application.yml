@@ -8,9 +8,7 @@ spring:
   sleuth:
     sampler:
       probability: 1
-  sentinel:
-    transport:
-      dashboard: localhost:8100
+
   datasource:
     username: root
     password: 123456
@@ -20,12 +18,16 @@ spring:
     nacos:
       discovery:
         server-addr: 123.56.152.42:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8100
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   redis:
     host: 123.56.152.42
     port: 6379
-
+  application:
+    name: gulimall-product
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:

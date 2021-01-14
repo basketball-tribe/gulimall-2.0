@@ -13,6 +13,7 @@ import com.atguigu.gulimall.cart.vo.CartVo;
 import com.atguigu.gulimall.cart.vo.SkuInfoVo;
 import com.atguigu.gulimall.common.utils.R;
 import jdk.nashorn.internal.parser.JSONParser;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
  * @Date 2020/12/30
  * @Version V1.0
  **/
+@Service
 public class CartServiceImpl implements CartService {
     @Autowired
     private StringRedisTemplate redisTemplate;

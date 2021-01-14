@@ -1,5 +1,5 @@
 server:
-  port: 18001
+  port: 18000
 
 spring:
   zipkin:
@@ -11,13 +11,14 @@ spring:
   sleuth:
     sampler:
       probability: 1
-  sentinel:
-    transport:
-      dashboard: localhost:8100
+
   cloud:
     nacos:
       discovery:
-        server-addr: #nacos注册中心地址
+        server-addr: 123.56.152.42:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8100
 
   application:
     name: gulimall-cart
@@ -25,6 +26,7 @@ spring:
     cache: false
   redis:
     host: 123.56.152.42
+    port: 6379
     session:
       store-type: redis
 

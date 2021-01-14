@@ -1,3 +1,6 @@
+server:
+  port: 8000
+
 spring:
   zipkin:
     base-url: http://123.56.152.42:9411
@@ -8,10 +11,6 @@ spring:
   sleuth:
     sampler:
       probability: 1
-  sentinel:
-    transport:
-      dashboard: localhost:8100
-
   datasource:
     username: root
     password: 123456
@@ -22,7 +21,9 @@ spring:
     nacos:
       discovery:
         server-addr: 123.56.152.42:8848
-
+    sentinel:
+      transport:
+        dashboard: localhost:8100
   application:
     name: gulimall-member
 mybatis-plus:
@@ -30,9 +31,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-server:
-  port: 8000
 
+#sentinel监听所有url
 management:
   endpoints:
     web:
