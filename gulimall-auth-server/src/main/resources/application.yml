@@ -3,35 +3,18 @@ server:
   servlet:
     session:
       timeout: 30m
-
 spring:
-  zipkin:
-    base-url: http://123.56.152.42:9411
-    sender:
-      type: web
-    discovery-client-enabled: false
-  #采样取值介于 0到1之间，1则表示全部收集
-  sleuth:
-    sampler:
-      probability: 1
   application:
     name: gulimall-auth-server
   cloud:
     nacos:
       discovery:
         server-addr: 123.56.152.42:8848
-    sentinel:
-      transport:
-        dashboard: localhost:8100
-  redis:
-    host: 123.56.152.42
-    port: 6379
-  session:
-    store-type: redis
 
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+  thymeleaf:
+    cache: false
+  #引入本项目的静态资源
+  mvc:
+    static-path-pattern: /static/**
+    resources:
+      static-locations: classpath:/static/

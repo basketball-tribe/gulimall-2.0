@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="/static/login/JD_sass/JD1.css" />
@@ -9,7 +9,7 @@
 	<body>
 		<!--顶部logo-->
 		<header>
-			<a href="/static/login/http://www.baidu.com"><img src="/static/login/JD_img/logo.jpg" /></a>
+			<a href="http://gulimall.com/"><img src="/static/login/JD_img/logo.jpg" /></a>
 			<p>欢迎登录</p>
 			<div class="top-1">
 				<img src="/static/login/JD_img/4de5019d2404d347897dee637895d02b_06.png" /><span>登录页面,调查问卷</span>
@@ -32,6 +32,7 @@
 				<div class="si_top">
 					<p>
 						<span>谷粒商城不会以任何理由要求您转账汇款，谨防诈骗。</span>
+						<span style="color: red">[[${session.msg}]]</span>
 					</p>
 				</div>
 				<div class="si_cen">
@@ -52,36 +53,36 @@
 						<span><a href="/static/login/#">更安全</a></span>
 					</p>
 				</div>
-				<form action="/login" method="post">
-					<div class="tips" style="color:red" th:text="${errors!=null?(#maps.containsKey(errors,'msg')?errors.msg:''):''}">
-					</div>
-					<div class="si_bom1 tab" style="display: none;">
+				<div class="si_bom1 tab" style="display: none;">
+					<form action="/login" method="post">
 						<div class="error">
-							<div></div>
-							请输入账户名和密码
-						</div>
-						<ul>
-							<li class="top_1">
-								<img src="/static/login/JD_img/user_03.png" class="err_img1" />
-								<input name="loginAccount" type="text" placeholder=" 邮箱/用户名/已验证手机" class="user" />
-							</li>
-							<li>
-								<img src="/static/login/JD_img/user_06.png" class="err_img2" />
-								<input name="password" type="password" placeholder=" 密码" class="password" />
-							</li>
-							<li class="bri">
-								<a href="/static/login/">忘记密码</a>
-							</li>
-							<li class="ent"><button type="submit" class="btn2"><a class="a">登 &nbsp; &nbsp;录</a></button></li>
-						</ul>
+						<div></div>
+						请输入账户名和密码
 					</div>
-				</form>
+						<div class="tips" th:text="${errors!=null?(#maps.containsKey(errors,'msg')?errors.msg:''):''}">
+						</div>
+					<ul>
+						<li class="top_1">
+							<img src="/static/login/JD_img/user_03.png" class="err_img1" />
+							<input type="text" name="loginacct" placeholder=" 邮箱/用户名/已验证手机" th:value="${errors!=null?(#maps.containsKey(errors,'msg')?errors.msg:''):''}" class="user" />
+						</li>
+						<li>
+							<img src="/static/login/JD_img/user_06.png" class="err_img2" />
+							<input type="password" name="password" placeholder=" 密码" class="password" />
+						</li>
+						<li class="bri">
+							<a href="/static/login/">忘记密码</a>
+						</li>
+						<li class="ent"><button class="btn2"><a>登&nbsp;&nbsp;录</a></button></li>
+					</ul>
+				</div>
+					</form>
 				<div class="si_out">
 					<ul>
 						<li>
-							<a href="https://api.weibo.com/oauth2/authorize?client_id=2144471074&response_type=code&redirect_uri=http://auth.gulimall.com/oauth2.0/weibo/success">
-								<img style="width: 50px;height: 18px;" src="/static/login/JD_img/weibo.png" />
-<!--								<span>微博</span>-->
+							<a href="/static/login/#">
+								<img src="/static/login/JD_img/qq.png" />
+								<span>QQ</span>
 							</a>
 						</li>
 						<li class="f4"> | </li>
@@ -91,10 +92,17 @@
 								<span>微信</span>
 							</a>
 						</li>
+						<li class="f4"> | </li>
+						<li>
+							<a href="https://api.weibo.com/oauth2/authorize?client_id=3411503706&response_type=code&redirect_uri=http://auth.gulimall.com/oauth2.0/weibo/success">
+								<img style="width: 50px;height: 18px" src="/static/login/JD_img/weibo.png" />
+							</a>
+						</li>
 					</ul>
 					<h5 class="rig">
 						<img src="/static/login/JD_img/4de5019d2404d347897dee637895d02b_25.png" />
-						<span><a href="/static/login/http://127.0.0.1:8020/JD/JD_%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2(1)/index.html?__hbt=1512049011905">立即注册</a></span>
+<!--						<span><a href="/static/login/http://127.0.0.1:8020/JD/JD_%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2(1)/index.html?__hbt=1512049011905">立即注册</a></span>-->
+						<span><a href="http://auth.gulimall.com/reg.html">立即注册</a></span>
 					</h5>
 				</div>
 			</div>
@@ -153,32 +161,32 @@
 		var err_img1 = document.getElementsByClassName('err_img1')[0];
 		var err_img2 = document.getElementsByClassName('err_img2')[0];
 
-		// btn2.onclick = function() {
-		// 	if (user.value == '' || pass.value == '') {
-		// 		err.style.display = 'block';
-		// 		user.style.border = '1px solid red';
-		// 		pass.style.border = '1px solid red';
-		// 		err_img1.src = 'JD_img/img11.png';
-		// 		err_img2.src = 'JD_img/img22.png';
-		// 	} else {
-		// 		var a = document.getElementsByClassName("a")[0].href = "http://www.baidu.com";
-		// 	}
-		// 	user.onfocus = function() {
-		// 		err_img1.src = 'JD_img/grow1.png';
-		// 		user.style.border = '1px solid #999';
-		// 	}
-		// 	pass.onfocus = function() {
-		// 		err_img2.src = 'JD_img/grow2.png';
-		// 		pass.style.border = '1px solid #999';
-		// 	}
-		// 	user.onblur = function() {
-		// 		err_img1.src = 'JD_img/img11.png';
-		// 		user.style.border = '1px solid red';
-		// 	}
-		// 	pass.onblur = function() {
-		// 		err_img2.src = 'JD_img/img22.png';
-		// 		pass.style.border = '1px solid red';
-		// 	}
-		// }
+		btn2.onclick = function() {
+			if (user.value == '' || pass.value == '') {
+				err.style.display = 'block';
+				user.style.border = '1px solid red';
+				pass.style.border = '1px solid red';
+				err_img1.src = 'JD_img/img11.png';
+				err_img2.src = 'JD_img/img22.png';
+			} else {
+				var a = document.getElementsByClassName("a")[0].href = "http://www.baidu.com";
+			}
+			user.onfocus = function() {
+				err_img1.src = 'JD_img/grow1.png';
+				user.style.border = '1px solid #999';
+			}
+			pass.onfocus = function() {
+				err_img2.src = 'JD_img/grow2.png';
+				pass.style.border = '1px solid #999';
+			}
+			user.onblur = function() {
+				err_img1.src = 'JD_img/img11.png';
+				user.style.border = '1px solid red';
+			}
+			pass.onblur = function() {
+				err_img2.src = 'JD_img/img22.png';
+				pass.style.border = '1px solid red';
+			}
+		}
 	</script>
 </html>

@@ -40,7 +40,7 @@ public class LoginController {
     @RequestMapping("/login.html")
     public String loginPage(HttpSession session) {
         if (session.getAttribute(AuthServerConstant.LOGIN_USER) != null) {
-            return "redirect:http://gulimall.com/";
+            return "redirect:http://127.0.0.1:20000/login.html";
         } else {
             return "login";
         }
@@ -54,13 +54,13 @@ public class LoginController {
             MemberResponseVo memberResponseVo = JSON.parseObject(jsonString, new TypeReference<MemberResponseVo>() {
             });
             session.setAttribute(AuthServerConstant.LOGIN_USER, memberResponseVo);
-            return "redirect:http://gulimall.com/";
+            return "redirect:http://127.0.0.1:9100/";
         } else {
             String msg = (String) r.get("msg");
             Map<String, String> errors = new HashMap<>();
             errors.put("msg", msg);
             attributes.addFlashAttribute("errors", errors);
-            return "redirect:http://auth.gulimall.com/login.html";
+            return "redirect:http://127.0.0.1:20000/login.html";
         }
     }
 
