@@ -34,6 +34,7 @@ spring:
     host: 123.56.152.42
 #    username: admin
 #    password: admin
+#开启消息手动确认模式
     listener:
       simple:
         acknowledge-mode: manual
