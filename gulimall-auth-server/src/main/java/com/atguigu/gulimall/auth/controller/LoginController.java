@@ -137,7 +137,7 @@ public class LoginController {
                 });
             session.setAttribute(AuthServerConstant.LOGIN_USER,MemberResponseVo);
             // 登录成功
-            return "redirect:http://gulimall.com";
+            return "redirect:http://localhost:9100/index.html";
         }
         // 登录失败
         String msg = r.getData("msg",new TypeReference<String>(){});

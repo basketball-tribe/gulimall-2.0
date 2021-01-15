@@ -3,6 +3,7 @@ package com.atguigu.gulimall.product.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.gulimall.product.vo.Catalog2Vo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -165,6 +166,54 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(path);
         Long[] objects = path.toArray(new Long[path.size()]);
         return objects;
+    }
+
+    @Override
+    public List<CategoryEntity> getLevel1Catagories() {
+//        long start = System.currentTimeMillis();
+        List<CategoryEntity> parent_cid = this.list(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+//        System.out.println("查询一级菜单时间:"+(System.currentTimeMillis()-start));
+        return parent_cid;
+    }
+
+    @Override
+    public Map<String, List<Catalog2Vo>> getCatalogJsonDbWithSpringCache() {
+        return getCategoriesDb();
+    }
+    //从数据库中查出三级分类
+    private  Map<String, List<Catalog2Vo>> getCategoriesDb() {
+        System.out.println("查询了数据库");
+        //优化业务逻辑，仅查询一次数据库
+        List<CategoryEntity> categoryEntities = this.list();
+        //查出所有一级分类
+        List<CategoryEntity> level1Categories = getCategoryByParentCid(categoryEntities, 0L);
+        Map<String, List<Catalog2Vo>> listMap = level1Categories.stream().collect(Collectors.toMap(k->k.getCatId().toString(), v -> {
+            //遍历查找出二级分类
+            List<CategoryEntity> level2Categories = getCategoryByParentCid(categoryEntities, v.getCatId());
+            List<Catalog2Vo> catalog2Vos=null;
+            if (level2Categories!=null){
+                //封装二级分类到vo并且查出其中的三级分类
+                catalog2Vos = level2Categories.stream().map(cat -> {
+                    //遍历查出三级分类并封装
+                    List<CategoryEntity> level3Catagories = getCategoryByParentCid(categoryEntities, cat.getCatId());
+                    List<Catalog2Vo.Catalog3Vo> catalog3Vos = null;
+                    if (level3Catagories != null) {
+                        catalog3Vos = level3Catagories.stream()
+                                .map(level3 -> new Catalog2Vo.Catalog3Vo(level3.getParentCid().toString(), level3.getCatId().toString(), level3.getName()))
+                                .collect(Collectors.toList());
+                    }
+                    Catalog2Vo catalog2Vo = new Catalog2Vo(v.getCatId().toString(), cat.getCatId().toString(), cat.getName(), catalog3Vos);
+                    return catalog2Vo;
+                }).collect(Collectors.toList());
+            }
+            return catalog2Vos;
+        }));
+        return listMap;
+    }
+
+    private List<CategoryEntity> getCategoryByParentCid(List<CategoryEntity> categoryEntities, long l) {
+        List<CategoryEntity> collect = categoryEntities.stream().filter(cat -> cat.getParentCid() == l).collect(Collectors.toList());
+        return collect;
     }
     private void findPath(Long categorygId, List<Long> path){
         if(categorygId !=0){

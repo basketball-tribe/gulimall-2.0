@@ -28,6 +28,14 @@ spring:
     port: 6379
   application:
     name: gulimall-product
+  thymeleaf:
+    cache: false
+    #引入本项目的静态资源
+  mvc:
+    static-path-pattern: /static/**
+    resources:
+      static-locations: classpath:/static/
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:

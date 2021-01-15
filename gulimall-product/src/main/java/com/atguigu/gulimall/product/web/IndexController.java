@@ -32,7 +32,7 @@ public class IndexController {
     @Autowired
     private SeckillFeignService seckillFeignService;
 
-    /*@GetMapping({"/", "index.html"})
+    @GetMapping("index.html")
     public String getIndex(Model model) {
         //获取所有的一级分类
         List<CategoryEntity> catagories = categoryService.getLevel1Catagories();
@@ -44,7 +44,7 @@ public class IndexController {
     @ResponseBody
     public Map<String, List<Catalog2Vo>> getCategoryMap() {
         return categoryService.getCatalogJsonDbWithSpringCache();
-    }*/
+    }
 
     @GetMapping("/read")
     @ResponseBody

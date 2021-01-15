@@ -7,6 +7,7 @@ import com.atguigu.gulimall.common.utils.BizCodeEnum;
 import com.atguigu.gulimall.member.exception.PhoneNumExistException;
 import com.atguigu.gulimall.member.exception.UserExistException;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegisterVo;
 import com.atguigu.gulimall.member.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,15 @@ public class MemberController {
         return R.ok();
     }
 
+    @RequestMapping("/login")
+    public R login(@RequestBody MemberLoginVo loginVo) {
+        MemberEntity entity=memberService.login(loginVo);
+        if (entity!=null){
+            return R.ok().put("memberEntity",entity);
+        }else {
+            return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMsg());
+        }
+    }
     /**
      * 微博登录
      * @param socialUser

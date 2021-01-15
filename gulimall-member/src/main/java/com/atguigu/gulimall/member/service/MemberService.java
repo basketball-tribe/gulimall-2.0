@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.member.service;
 
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegisterVo;
 import com.atguigu.gulimall.member.vo.SocialUser;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -31,5 +32,6 @@ public interface MemberService extends IService<MemberEntity> {
      * @return
      */
     MemberEntity login(SocialUser socialUser);
+    MemberEntity login(MemberLoginVo loginVo);
 }
 

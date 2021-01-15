@@ -7,6 +7,7 @@ import com.atguigu.gulimall.member.entity.MemberLevelEntity;
 import com.atguigu.gulimall.member.exception.PhoneNumExistException;
 import com.atguigu.gulimall.member.exception.UserExistException;
 import com.atguigu.gulimall.member.service.MemberLevelService;
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegisterVo;
 import com.atguigu.gulimall.member.vo.SocialUser;
 import org.apache.http.HttpResponse;
@@ -112,6 +113,25 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             user.setUid(socialUser.getUid());
             user.setExpiresIn(socialUser.getExpires_in());
             this.updateById(user);
+        }
+        return null;
+    }
+
+    @Override
+    public MemberEntity login(MemberLoginVo loginVo) {
+        String loginAccount = loginVo.getLoginacct();
+        //以用户名或电话号登录的进行查询
+        MemberEntity entity = this.getOne(new QueryWrapper<MemberEntity>().eq("username", loginAccount).or().eq("mobile", loginAccount));
+        if (entity!=null){
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            boolean matches = bCryptPasswordEncoder.matches(loginVo.getPassword(), entity.getPassword());
+            //TODO 由于不知道加密规则所以默认都能登录
+            //TODO *************以后一定要修改此处*********
+            matches =true;
+            if (matches){
+                entity.setPassword("");
+                return entity;
+            }
         }
         return null;
     }
