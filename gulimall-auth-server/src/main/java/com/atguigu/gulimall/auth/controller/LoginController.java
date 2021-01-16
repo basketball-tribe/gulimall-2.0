@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.auth.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.atguigu.gulimall.common.constant.AuthServerConstant;
 import com.atguigu.gulimall.common.excetion.BizCodeEnume;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -129,13 +132,16 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String login(UserLoginVo vo, RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request) {
         // 登录请求
         R r = memberFeignService.login(vo);
         if (r.getCode() == 0) {
-           MemberResponseVo MemberResponseVo = r.getData(new TypeReference<MemberResponseVo>() {
-                });
-            session.setAttribute(AuthServerConstant.LOGIN_USER,MemberResponseVo);
+            String jsonString = JSON.toJSONString(r.get("memberEntity"));
+            MemberResponseVo memberResponseVo = JSON.parseObject(jsonString, new TypeReference<MemberResponseVo>() {
+            });
+
+            session.setAttribute(AuthServerConstant.LOGIN_USER,memberResponseVo);
+            Cookie[] cookies = request.getCookies();
             // 登录成功
             return "redirect:http://localhost:9100/index.html";
         }

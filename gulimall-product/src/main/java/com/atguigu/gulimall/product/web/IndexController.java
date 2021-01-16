@@ -5,6 +5,7 @@ import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.feign.SeckillFeignService;
 import com.atguigu.gulimall.product.service.CategoryService;
 import com.atguigu.gulimall.product.vo.Catalog2Vo;
+import org.apache.http.HttpRequest;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,8 +37,9 @@ public class IndexController {
     private SeckillFeignService seckillFeignService;
 
     @GetMapping("index.html")
-    public String getIndex(Model model) {
+    public String getIndex(Model model, HttpSession session, HttpServletRequest request) {
         //获取所有的一级分类
+        Object loginUser = session.getAttribute("loginUser");
         List<CategoryEntity> catagories = categoryService.getLevel1Catagories();
         model.addAttribute("catagories", catagories);
         return "index";
@@ -133,5 +138,9 @@ public class IndexController {
     public R getCurrentSeckillSkus() {
         return seckillFeignService.getCurrentSeckillSkus();
     }
-
+    @ResponseBody
+     @GetMapping("/testredis")
+    public void testRedis(){
+        redisTemplate.opsForValue().set("zangs","zhangs ");
+    }
 }
