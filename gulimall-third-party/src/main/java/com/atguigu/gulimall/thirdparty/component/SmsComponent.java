@@ -1,11 +1,20 @@
 package com.atguigu.gulimall.thirdparty.component;
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.atguigu.gulimall.common.utils.HttpUtils;
 import lombok.Data;
 import org.apache.http.HttpResponse;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +26,7 @@ public class SmsComponent {
     private String path ="/dx/sendSms";
     private String appcode ="";
 
-    public void sendCode(String phone,String code) {
+    public void sendCode2(String phone,String code) {
 //        String host = "";
 //        String path = "";
         String method = "POST";
@@ -47,6 +56,31 @@ public class SmsComponent {
             //获取response的body
             //System.out.println(EntityUtils.toString(response.getEntity()));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCode(String phone,String code){
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4G5THQqLs89vf3GUP4kE", "kJ1kZpl5bEEXKt5X569ep5rVEaJxIt");
+        IAcsClient client = new DefaultAcsClient(profile);
+
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-hangzhou");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "阿里云");
+        request.putQueryParameter("TemplateCode", "SMS_209826420");
+        request.putQueryParameter("TemplateParam", "{\"code\":\""+code+"\"}");
+
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
             e.printStackTrace();
         }
     }
