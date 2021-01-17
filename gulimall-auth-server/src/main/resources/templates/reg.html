@@ -5956,13 +5956,13 @@ Cookie</span>是由网页服务器存放在您的访问设备上的文本文件�
        class="logo"><img src="/static/reg/img/logo1.jpg" alt=""></a>
 
     <div class="desc">
-		<a href="http://localhost:20000/login.html" th:if="${session.loginUser ==null}" class="li_2">免费注册</a>
+		<a href="http://auth.gulimall.com/login.html" th:if="${session.loginUser ==null}" class="li_2">免费注册</a>
 	</div>
     <div class="dfg">
 		<a href="#" th:if="${session.loginUser !=null}">欢迎：[[${session.loginUser.nickname}]]</a>
        <div th:if="${session.loginUser ==null}">
 		     <span>已有账号？</span>
-       		 <a href="http://localhost:20000/login.html">请登录</a>
+       		 <a href="http://auth.gulimall.com/login.html">请登录</a>
 	   </div>
     </div>
 </header>

@@ -36,10 +36,9 @@ public class IndexController {
     @Autowired
     private SeckillFeignService seckillFeignService;
 
-    @GetMapping("index.html")
-    public String getIndex(Model model, HttpSession session, HttpServletRequest request) {
+    @GetMapping({"/","index.html"})
+    public String getIndex(Model model) {
         //获取所有的一级分类
-        Object loginUser = session.getAttribute("loginUser");
         List<CategoryEntity> catagories = categoryService.getLevel1Catagories();
         model.addAttribute("catagories", catagories);
         return "index";

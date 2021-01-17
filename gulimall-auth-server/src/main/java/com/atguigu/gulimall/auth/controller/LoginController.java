@@ -143,7 +143,7 @@ public class LoginController {
             session.setAttribute(AuthServerConstant.LOGIN_USER,memberResponseVo);
             Cookie[] cookies = request.getCookies();
             // 登录成功
-            return "redirect:http://localhost:9100/index.html";
+            return "redirect:http://gulimall.com/index.html";
         }
         // 登录失败
         String msg = r.getData("msg",new TypeReference<String>(){});
