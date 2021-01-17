@@ -10,7 +10,11 @@ spring:
     nacos:
       discovery:
         server-addr: 123.56.152.42:8848
-
+      config:
+          group: DEFAULT_GROUP
+          encode: utf-8
+          file-extension: yml
+          server-addr: 123.56.152.42:8848
   thymeleaf:
     cache: false
   #引入本项目的静态资源

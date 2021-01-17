@@ -67,7 +67,7 @@ public class MyRabbitConfig {
     }
 
     /**
-     * 创建一个普通队列
+     * 创建一个普通队列订单解锁队列
      * @return
      */
     @Bean
@@ -75,6 +75,15 @@ public class MyRabbitConfig {
         return  new Queue("order.release.order.queue",true,false,false);
     }
 
+    /**
+     * 商品秒杀队列
+     * @return
+     */
+    @Bean
+    public Queue orderSecKillOrrderQueue() {
+        Queue queue = new Queue("order.seckill.order.queue", true, false, false);
+        return queue;
+    }
     /**
      * 创建订单的binding
      * 发送消息到延迟队列

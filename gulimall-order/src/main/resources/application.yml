@@ -1,14 +1,15 @@
 server:
-  port: 9001
+  port: 9000
 
 spring:
   application:
     name: gulimall-order
   redis:
     host: 123.56.152.42
-    session:
-      store-type: redis
     port: 6379
+  session:
+    store-type: redis
+
   zipkin:
     base-url: http://123.56.152.42:9411
     sender:
@@ -19,10 +20,15 @@ spring:
     sampler:
       probability: 1
   cloud:
-    nacos:
-      config:
-        server-addr: 123.56.152.42:8848
-    sentinel:
+      nacos:
+          discovery:
+              server-addr: 123.56.152.42:8848
+          config:
+              group: DEFAULT_GROUP
+              encode: utf-8
+              file-extension: yml
+              server-addr: 123.56.152.42:8848
+      sentinel:
       transport:
         dashboard: localhost:8100
   datasource:
@@ -32,14 +38,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
     host: 123.56.152.42
-#    username: admin
-#    password: admin
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: my_vhost
 #开启消息手动确认模式
     listener:
       simple:
         acknowledge-mode: manual
-    port: 5672
-    virtual-host: /
+
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
