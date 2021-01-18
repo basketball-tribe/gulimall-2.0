@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.product.web;
 
 import com.atguigu.gulimall.common.utils.R;
+import com.atguigu.gulimall.common.vo.MemberResponseVo;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.feign.SeckillFeignService;
 import com.atguigu.gulimall.product.service.CategoryService;

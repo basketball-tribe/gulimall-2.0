@@ -17,8 +17,8 @@ spring:
           server-addr: 123.56.152.42:8848
   thymeleaf:
     cache: false
-  #引入本项目的静态资源
-  mvc:
-    static-path-pattern: /static/**
-    resources:
-      static-locations: classpath:/static/
+#  #引入本项目的静态资源,若不适用nginx则使用下面配置
+#  mvc:
+#    static-path-pattern: /static/**
+#    resources:
+#      static-locations: classpath:/static/

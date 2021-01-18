@@ -141,7 +141,6 @@ public class LoginController {
             });
 
             session.setAttribute(AuthServerConstant.LOGIN_USER,memberResponseVo);
-            Cookie[] cookies = request.getCookies();
             // 登录成功
             return "redirect:http://gulimall.com/index.html";
         }
