@@ -19,10 +19,10 @@
 <body>
   <div class="top_find">
     <div class="top_find_son">
-      <img src="/static/index/img/top_find_logo.png" alt="">
+<!--      <img src="/static/index/img/top_find_logo.png" alt="">-->
       <div class="input_find">
         <input type="text" placeholder="卸妆水" />
-        <span style="background: url('/static/index/img/img_12.png') 0 -1px;"></span>
+        <span style="background: url('/static/index/img/img_09.png') 0 -1px;"></span>
         <a href="/static/#"><img src="/static/index/img/img_09.png" /></a>
       </div>
     </div>
@@ -120,7 +120,7 @@
       <div class="header_ico">
         <div class="header_gw">
           <img src="/static/index/img/img_15.png" />
-          <span><a href="http://localhost:18000/cart.html">我的购物车</a></span>
+          <span><a href="http://cart.gulimall.com/cart.html">我的购物车</a></span>
           <span>0</span>
         </div>
         <div class="header_ko">
@@ -582,11 +582,11 @@
 <script type="text/javascript">
   function search() {
       var keyword=$("#searchText").val()
-      window.location.href="http://localhost:12000/search.html?keyword="+keyword;
+      window.location.href="http://search.gulimall.com/search.html?keyword="+keyword;
   }
 
-  $.get("http://localhost:15000/getCurrentSeckillSkus", function (res) {
-    if (res.data.length > 0) {
+  $.get("http://seckill.gulimall.com/getCurrentSeckillSkus", function (res) {
+    if (res.code ==0 &&   res.data != null && res.data.length > 0) {
       res.data.forEach(function (item) {
         $("<li onclick='toDetail(" + item.skuId + ")'></li>").append($("<img style='width: 130px; height: 130px' src='" + item.skuInfoVo.skuDefaultImg + "' />"))
                 .append($("<p>"+item.skuInfoVo.skuTitle+"</p>"))
@@ -602,7 +602,7 @@
   }
 
 </script>
-<script type="text/javascript" src="/static/static/index/js/text.js"></script>
+<script type="text/javascript" src="/static/index/js/text.js"></script>
 <script type="text/javascript" src="/static/index/js/header.js"></script>
 <script type="text/javascript" src="/static/index/js/secend.js"></script>
 <script type="text/javascript" src="/static/index/js/zz.js"></script>

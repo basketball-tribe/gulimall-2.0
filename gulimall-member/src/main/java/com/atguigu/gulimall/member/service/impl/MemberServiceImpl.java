@@ -114,7 +114,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             user.setExpiresIn(socialUser.getExpires_in());
             this.updateById(user);
         }
-        return null;
+        return user;
     }
 
     @Override

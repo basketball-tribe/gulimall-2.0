@@ -49,8 +49,8 @@ public class OAuth2Controller {
 
         // 根据code换取accessToken
         Map<String, String> map = new HashMap<>();
-        map.put("client_id", "3411503706");
-        map.put("client_secret", "0e0689395bc3576e4ae0c531173221c2");
+        map.put("client_id", "2460608311");
+        map.put("client_secret", "3eec8f7e3d89d65d6cbbfaef016ce194");
         map.put("grant_type", "authorization_code");
         map.put("redirect_uri", "http://auth.gulimall.com/oauth2.0/weibo/success");
         map.put("code", code);
