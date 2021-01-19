@@ -2,6 +2,7 @@ package com.atguigu.gulimall.search.controller;
 
 import com.atguigu.gulimall.common.to.es.SkuEsModel;
 import com.atguigu.gulimall.common.utils.R;
+import com.atguigu.gulimall.search.service.ProductSaveService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
