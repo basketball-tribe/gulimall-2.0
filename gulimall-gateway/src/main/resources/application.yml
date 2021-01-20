@@ -73,7 +73,13 @@ spring:
             - Path=/api/coupon/**
           filters:
             - RewritePath=/api/(?<segment>/?.*),/$\{segment}
-
+        #将路径为Path=/api/order/**转发至订单服务
+        - id: gulimall-order
+          uri: lb://gulimall-order
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*),/$\{segment}
         #将路径为Path=/api/**转发至后台管理
         - id: admin_route
           uri: lb://renren-fast

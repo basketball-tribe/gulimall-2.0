@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://123.56.152.42:3308/gulimall_wms
+    url: jdbc:mysql://123.56.152.42:3308/gulimall_wms?characterEncoding=utf8&amp;useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   zipkin:
     base-url: http://123.56.152.42:9411

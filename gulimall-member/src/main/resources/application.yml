@@ -14,7 +14,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://123.56.152.42:3308/gulimall_ums
+    url: jdbc:mysql://123.56.152.42:3308/gulimall_ums?characterEncoding=utf8&amp;useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   cloud:

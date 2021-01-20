@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.product.feign.feign;
+package com.atguigu.gulimall.product.feign;
 
 import com.atguigu.gulimall.common.to.SkuReductionTo;
 import com.atguigu.gulimall.common.to.SpuBoundTo;

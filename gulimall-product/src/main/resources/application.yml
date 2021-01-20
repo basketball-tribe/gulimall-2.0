@@ -12,7 +12,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://123.56.152.42:3308/gulimall_pms
+    url: jdbc:mysql://123.56.152.42:3308/gulimall_pms?characterEncoding=utf8&amp;useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
@@ -20,7 +20,7 @@ spring:
         server-addr: 123.56.152.42:8848
     sentinel:
       transport:
-        dashboard: localhost:8100
+        dashboard: localhost:8080
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   redis:

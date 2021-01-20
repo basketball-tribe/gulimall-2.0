@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.product.feign.feign;
+package com.atguigu.gulimall.product.feign;
 
 import com.atguigu.gulimall.common.to.es.SkuEsModel;
 import com.atguigu.gulimall.common.utils.R;

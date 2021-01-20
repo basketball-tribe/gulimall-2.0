@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.product.feign.feign;
+package com.atguigu.gulimall.product.feign;
 
 import com.atguigu.gulimall.common.to.mq.SkuHasStockVo;
 import org.springframework.cloud.openfeign.FeignClient;
