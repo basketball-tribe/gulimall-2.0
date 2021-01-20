@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.search.controller;
 
+import com.atguigu.gulimall.common.excetion.BizCodeEnume;
 import com.atguigu.gulimall.common.to.es.SkuEsModel;
 import com.atguigu.gulimall.common.utils.R;
 import com.atguigu.gulimall.search.service.ProductSaveService;
@@ -24,7 +25,18 @@ public class ElasticSaveController {
     @Autowired
     private ProductSaveService productSaveService;
     @PostMapping("/product")
-    public R saveProductAsIndices(@RequestBody List<SkuEsModel> skuEsModels){
-        return R.ok();
+    public R saveProductAsIndices(@RequestBody List<SkuEsModel> esModels){
+        boolean flag =false;
+        try {
+            flag = productSaveService.productStatusUp(esModels);
+        }catch (Exception e){
+            log.error("ElasticSaveController商品上架产生了错误：{}", e);
+            return R.error(BizCodeEnume.PRODUCT_UP_TO_ES_EXCETION.getCode(), BizCodeEnume.PRODUCT_UP_TO_ES_EXCETION.getMsg());
+        }
+        if (!flag) {
+            return R.ok();
+        } else {
+            return R.error(BizCodeEnume.PRODUCT_UP_TO_ES_EXCETION.getCode(), BizCodeEnume.PRODUCT_UP_TO_ES_EXCETION.getMsg());
+        }
     }
 }

@@ -29,7 +29,8 @@ import com.atguigu.gulimall.product.service.CategoryService;
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
     @Autowired
     StringRedisTemplate redisTemplate;
-    private Map<String,Object> cache = new HashMap<>();
+    private Map<String, Object> cache = new HashMap<>();
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryEntity> page = this.page(
@@ -42,19 +43,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 以tree形式查询商品
+     *
      * @return
      */
     @Override
     public List<CategoryEntity> listWithTree() {
-        return  listWithTreeRedisLock2();
+        return listWithTreeRedisLock2();
     }
+
     //分布式锁
-    private  List<CategoryEntity> listWithTreeRedisLock2() {
-        String uuid =UUID.randomUUID().toString();
+    private List<CategoryEntity> listWithTreeRedisLock2() {
+        String uuid = UUID.randomUUID().toString();
         //使用setIfAbsent 来确保插入值和插入过期时间为原子性
-        Boolean lock =redisTemplate.opsForValue().setIfAbsent("lock",uuid,5, TimeUnit.SECONDS);
-        if(lock){
-            List<CategoryEntity> categoryEntitiesResult =listWithTreeRedisLock1();
+        Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, 5, TimeUnit.SECONDS);
+        if (lock) {
+            List<CategoryEntity> categoryEntitiesResult = listWithTreeRedisLock1();
             String lockValue = redisTemplate.opsForValue().get("lock");
             String script = "if redis.call(\"get\",KEYS[1]) == ARGV[1] then\n" +
                     "    return redis.call(\"del\",KEYS[1])\n" +
@@ -64,7 +67,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             // 删除锁必须保证原子性。使用redis+Lua脚本完成
             redisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class), Arrays.asList("lock"), lockValue);
             return categoryEntitiesResult;
-        }else{
+        } else {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -74,40 +77,43 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
 
     }
+
     //单机版不需要考虑分布式
-    private  List<CategoryEntity> listWithTreeRedisLock1() {
-        List<CategoryEntity> categoryEntitiesResult1 =new ArrayList<>();
+    private List<CategoryEntity> listWithTreeRedisLock1() {
+        List<CategoryEntity> categoryEntitiesResult1 = new ArrayList<>();
         String categoryEntities1 = redisTemplate.opsForValue().get("categoryEntities");
-        if(StringUtils.isEmpty(categoryEntities1)){
+        if (StringUtils.isEmpty(categoryEntities1)) {
             System.out.println("缓存没有，从DB中查询");
-            synchronized (this){
+            synchronized (this) {
                 String categoryEntities2 = redisTemplate.opsForValue().get("categoryEntities");
-                if(StringUtils.isEmpty(categoryEntities2)){
-                    List<CategoryEntity> categoryEntitiesResult2=   listWithTreeFromDB2();
-                    redisTemplate.opsForValue().set("categoryEntities",JSON.toJSONString(categoryEntitiesResult2));
+                if (StringUtils.isEmpty(categoryEntities2)) {
+                    List<CategoryEntity> categoryEntitiesResult2 = listWithTreeFromDB2();
+                    redisTemplate.opsForValue().set("categoryEntities", JSON.toJSONString(categoryEntitiesResult2));
                     return categoryEntitiesResult2;
-                }else {
-                    List<CategoryEntity>  categoryEntitiesResult3 = JSON.parseObject(categoryEntities2, new TypeReference<List<CategoryEntity>>() {});
+                } else {
+                    List<CategoryEntity> categoryEntitiesResult3 = JSON.parseObject(categoryEntities2, new TypeReference<List<CategoryEntity>>() {
+                    });
                     return categoryEntitiesResult3;
                 }
             }
 
         }
-        categoryEntitiesResult1 = JSON.parseObject(categoryEntities1, new TypeReference<List<CategoryEntity>>() {});
+        categoryEntitiesResult1 = JSON.parseObject(categoryEntities1, new TypeReference<List<CategoryEntity>>() {
+        });
         return categoryEntitiesResult1;
     }
 
 
-
     /**
      * 不加锁版
+     *
      * @return
      */
-    private List<CategoryEntity> listWithTreeFromDB1(){
-        List<CategoryEntity> categoryEntities =new ArrayList<>();
+    private List<CategoryEntity> listWithTreeFromDB1() {
+        List<CategoryEntity> categoryEntities = new ArrayList<>();
         //测试map缓存，只是测试map缓存，正式不在使用map缓存
-        categoryEntities=(List<CategoryEntity>) cache.get("categoryEntities");
-        if(categoryEntities == null || categoryEntities.size()<=0){
+        categoryEntities = (List<CategoryEntity>) cache.get("categoryEntities");
+        if (categoryEntities == null || categoryEntities.size() <= 0) {
             //1.查询出所有分类
             List<CategoryEntity> entities = baseMapper.selectList(null);
             //递归查询子分类
@@ -115,7 +121,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     categoryEntity.getParentCid() == 0)
                     .map(categoryEntity -> {
                         //将总数和本次要查询的数据(主要是为了获取到本类的id作为子类的父级id)存入需要递归的方法中
-                        categoryEntity.setChildren(getChildrens(categoryEntity,entities));
+                        categoryEntity.setChildren(getChildrens(categoryEntity, entities));
                         return categoryEntity;
                     })
                     .sorted(
@@ -124,33 +130,35 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                             }
                     )
                     .collect(Collectors.toList());
-            cache.put("categoryEntities",level1Menus);
+            cache.put("categoryEntities", level1Menus);
             return level1Menus;
         }
         return categoryEntities;
     }
+
     /*
-    * 加锁版，插入数据库加锁可以防止多次缓存击穿
-    * */
-    private synchronized List<CategoryEntity> listWithTreeFromDB2(){
-            //1.查询出所有分类
-            List<CategoryEntity> entities = baseMapper.selectList(null);
-            //递归查询子分类
-            List<CategoryEntity> level1Menus = entities.stream().filter(categoryEntity ->
-                    categoryEntity.getParentCid() == 0)
-                    .map(categoryEntity -> {
-                        //将总数和本次要查询的数据(主要是为了获取到本类的id作为子类的父级id)存入需要递归的方法中
-                        categoryEntity.setChildren(getChildrens(categoryEntity,entities));
-                        return categoryEntity;
-                    })
-                    .sorted(
-                            (meau1, meau2) -> {
-                                return (meau1.getSort() == null ? 0 : meau1.getSort()) - (meau2.getSort() == null ? 0 : meau2.getSort());
-                            }
-                    )
-                    .collect(Collectors.toList());
-            return level1Menus;
+     * 加锁版，插入数据库加锁可以防止多次缓存击穿
+     * */
+    private synchronized List<CategoryEntity> listWithTreeFromDB2() {
+        //1.查询出所有分类
+        List<CategoryEntity> entities = baseMapper.selectList(null);
+        //递归查询子分类
+        List<CategoryEntity> level1Menus = entities.stream().filter(categoryEntity ->
+                categoryEntity.getParentCid() == 0)
+                .map(categoryEntity -> {
+                    //将总数和本次要查询的数据(主要是为了获取到本类的id作为子类的父级id)存入需要递归的方法中
+                    categoryEntity.setChildren(getChildrens(categoryEntity, entities));
+                    return categoryEntity;
+                })
+                .sorted(
+                        (meau1, meau2) -> {
+                            return (meau1.getSort() == null ? 0 : meau1.getSort()) - (meau2.getSort() == null ? 0 : meau2.getSort());
+                        }
+                )
+                .collect(Collectors.toList());
+        return level1Menus;
     }
+
     @Override
     public void removeMenuByIds(List<Long> asList) {
         //TODO  1、检查当前删除的菜单，是否被别的地方引用
@@ -161,7 +169,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public Long[] findCatelogPathById(Long categorygId) {
-         List<Long> path =new ArrayList<>();
+        List<Long> path = new ArrayList<>();
         findPath(categorygId, path);
         Collections.reverse(path);
         Long[] objects = path.toArray(new Long[path.size()]);
@@ -180,18 +188,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public Map<String, List<Catalog2Vo>> getCatalogJsonDbWithSpringCache() {
         return getCategoriesDb();
     }
+
     //从数据库中查出三级分类
-    private  Map<String, List<Catalog2Vo>> getCategoriesDb() {
+    private Map<String, List<Catalog2Vo>> getCategoriesDb() {
         System.out.println("查询了数据库");
         //优化业务逻辑，仅查询一次数据库
         List<CategoryEntity> categoryEntities = this.list();
         //查出所有一级分类
         List<CategoryEntity> level1Categories = getCategoryByParentCid(categoryEntities, 0L);
-        Map<String, List<Catalog2Vo>> listMap = level1Categories.stream().collect(Collectors.toMap(k->k.getCatId().toString(), v -> {
+        Map<String, List<Catalog2Vo>> listMap = level1Categories.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
             //遍历查找出二级分类
             List<CategoryEntity> level2Categories = getCategoryByParentCid(categoryEntities, v.getCatId());
-            List<Catalog2Vo> catalog2Vos=null;
-            if (level2Categories!=null){
+            List<Catalog2Vo> catalog2Vos = null;
+            if (level2Categories != null) {
                 //封装二级分类到vo并且查出其中的三级分类
                 catalog2Vos = level2Categories.stream().map(cat -> {
                     //遍历查出三级分类并封装
@@ -215,11 +224,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<CategoryEntity> collect = categoryEntities.stream().filter(cat -> cat.getParentCid() == l).collect(Collectors.toList());
         return collect;
     }
-    private void findPath(Long categorygId, List<Long> path){
-        if(categorygId !=0){
+
+    private void findPath(Long categorygId, List<Long> path) {
+        if (categorygId != 0) {
             path.add(categorygId);
-            CategoryEntity categoryEntity =getById(categorygId);
-            findPath(categoryEntity.getParentCid(),path);
+            CategoryEntity categoryEntity = getById(categorygId);
+            findPath(categoryEntity.getParentCid(), path);
         }
     }
 

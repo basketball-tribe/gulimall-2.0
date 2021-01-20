@@ -44,7 +44,11 @@ public class WareSkuController {
     public List<SkuHasStockVo> getSkuHasStocks(@RequestBody List<Long> ids) {
         return wareSkuService.getSkuHasStocks(ids);
     }
-
+    @RequestMapping("/getSkusHasStock")
+    public R getSkusHasStock(@RequestBody List<Long> ids) {
+        List<SkuHasStockVo> skuHasStocks = wareSkuService.getSkuHasStocks(ids);
+        return R.ok().setData(skuHasStocks);
+    }
     /**
      * 下单时锁库存
      * @param lockVo

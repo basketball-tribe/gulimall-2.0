@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.gulimall.common.constant.ProductConstant;
 import com.atguigu.gulimall.common.to.es.SkuEsModel;
 import com.atguigu.gulimall.common.to.mq.SkuHasStockVo;
@@ -81,9 +82,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         List<SkuInfoEntity> skuInfoEntities=skuInfoService.getSkusBySpuId(spuId);
         //TODO 4、查出当前sku的所有可以被用来检索的规格属性
         List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
-        List<Long> attrIds = productAttrValueEntities.stream().map(attr -> {
-            return attr.getAttrId();
-        }).collect(Collectors.toList());
+        List<Long> attrIds = productAttrValueEntities.stream().map(ProductAttrValueEntity::getAttrId).collect(Collectors.toList());
         List<Long> searchIds=attrService.selectSearchAttrIds(attrIds);
         Set<Long> ids = new HashSet<>(searchIds);
         List<SkuEsModel.Attr> searchAttrs = productAttrValueEntities.stream().filter(entity -> {
@@ -98,8 +97,11 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         Map<Long, Boolean> stockMap = null;
         try {
             List<Long> longList = skuInfoEntities.stream().map(SkuInfoEntity::getSkuId).collect(Collectors.toList());
-            List<SkuHasStockVo> skuHasStocks = wareFeignService.getSkuHasStocks(longList);
-            stockMap = skuHasStocks.stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, SkuHasStockVo::getHasStock));
+       //     List<SkuHasStockVo> skuHasStocks = wareFeignService.getSkuHasStocks(longList);
+            R r = wareFeignService.getSkusHasStock(longList);
+            TypeReference<List<SkuHasStockVo>> typeReference = new TypeReference<List<SkuHasStockVo>>() {
+            };
+            stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockVo::getSkuId, SkuHasStockVo::getHasStock));
         }catch (Exception e){
             log.error("远程调用库存服务失败,原因{}",e);
         }
@@ -130,6 +132,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             this.baseMapper.upSpuStatus(spuId, ProductConstant.ProductStatusEnum.SPU_UP.getCode());
         }else {
             log.error("商品远程es保存失败");
+         //TODO 保存失败 需要重复调用 接口幂等性问题 重试机制
         }
     }
 

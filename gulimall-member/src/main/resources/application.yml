@@ -17,10 +17,10 @@ spring:
     url: jdbc:mysql://123.56.152.42:3308/gulimall_ums?characterEncoding=utf8&amp;useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 123.56.152.42:8848
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 123.56.152.42:8848
     sentinel:
       transport:
         dashboard: localhost:8100

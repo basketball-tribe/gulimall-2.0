@@ -1,11 +1,11 @@
 
 spring:
-  application:
-    name: renren-fast
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 123.56.152.42:8848
+#  application:
+#    name: renren-fast
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 123.56.152.42:8848
   datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:

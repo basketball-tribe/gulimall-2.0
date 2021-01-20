@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProductSaveService {
     boolean saveProductAsIndices(List<SkuEsModel> skuEsModels) throws IOException;
+
+    boolean productStatusUp(List<SkuEsModel> esModels) throws IOException;
 }
