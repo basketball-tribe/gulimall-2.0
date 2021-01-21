@@ -1,12 +1,12 @@
 
 spring:
-#  application:
-#    name: renren-fast
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 123.56.152.42:8848
-  datasource:
+    application:
+        name: renren-fast
+    cloud:
+        nacos:
+            discovery:
+                server-addr: 123.56.152.42:8848
+    datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
             driver-class-name: com.mysql.cj.jdbc.Driver
@@ -55,4 +55,5 @@ spring:
 #      username: renren
 #      password: 123456
 server:
-  port: 8888
+    port: 8888
+
