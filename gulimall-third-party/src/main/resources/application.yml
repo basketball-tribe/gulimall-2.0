@@ -10,28 +10,8 @@ spring:
     sleuth:
       sampler:
         probability: 1
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 123.56.152.42:8848
-    sentinel:
-      transport:
-        dashboard: localhost:8100
-    alicloud:
-      access-key: LTAI4FwvfjSycd1APnuG9bjj
-      secret-key: O6xaxyiWfSIitcOkSuK27ju4hXT5Hl
-      oss:
-        endpoint: oss-cn-beijing.aliyuncs.com
-        bucket: gulimall-hello
-
-  application:
-    name: gulimall-third-party
   redis:
     host: 123.56.152.42
     port: 6379
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+
 

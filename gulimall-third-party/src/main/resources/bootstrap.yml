@@ -11,8 +11,14 @@ spring:
     sentinel:
       transport:
         dashboard: localhost:8100
+    alicloud:
+      access-key: LTAI4FwvfjSycd1APnuG9bjj
+      secret-key: O6xaxyiWfSIitcOkSuK27ju4hXT5Hl
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: gulimall-hello
   application:
-    name: gulimall-gateway
+    name: gulimall-third-party
 management:
   endpoints:
     web:

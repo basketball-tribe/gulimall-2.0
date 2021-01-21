@@ -14,27 +14,10 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://123.56.152.42:3308/gulimall_ums?characterEncoding=utf8&amp;useSSL=false
+    url: jdbc:mysql://123.56.152.42:3308/gulimall_ums?characterEncoding=utf8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 123.56.152.42:8848
-    sentinel:
-      transport:
-        dashboard: localhost:8100
-  application:
-    name: gulimall-member
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
-
-#sentinel监听所有url
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'

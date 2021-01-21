@@ -8,11 +8,11 @@ spring:
         encode: utf-8
         file-extension: yml
         server-addr: 123.56.152.42:8848
-    sentinel:
-      transport:
-        dashboard: localhost:8100
+  sentinel:
+    transport:
+      dashboard: 123.56.152.42:8858
   application:
-    name: gulimall-gateway
+    name: gulimall-ware
 management:
   endpoints:
     web:

@@ -12,11 +12,8 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://123.56.152.42:3308/gulimall_pms?characterEncoding=utf8&amp;useSSL=false
+    url: jdbc:mysql://123.56.152.42:3308/gulimall_pms?characterEncoding=utf8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    sentinel:
-#      transport:
-#        dashboard: localhost:8080
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   redis:
@@ -48,9 +45,5 @@ gulimall:
     corePoolSize: 10
     maxPoolSize: 20
     keepAliveTime: 300
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
+
 

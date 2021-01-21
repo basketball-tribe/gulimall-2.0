@@ -12,7 +12,7 @@ spring:
       transport:
         dashboard: localhost:8100
   application:
-    name: gulimall-gateway
+    name: gulimall-order
 management:
   endpoints:
     web:

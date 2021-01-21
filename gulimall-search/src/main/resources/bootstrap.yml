@@ -12,7 +12,8 @@ spring:
       transport:
         dashboard: localhost:8100
   application:
-    name: gulimall-gateway
+    name: gulimall-search
+#sentinel监控所有请求
 management:
   endpoints:
     web:
