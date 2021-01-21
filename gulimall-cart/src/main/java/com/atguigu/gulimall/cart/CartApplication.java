@@ -8,10 +8,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-public class GulimallCartApplication {
+public class CartApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GulimallCartApplication.class, args);
+        SpringApplication.run(CartApplication.class, args);
     }
 
 }

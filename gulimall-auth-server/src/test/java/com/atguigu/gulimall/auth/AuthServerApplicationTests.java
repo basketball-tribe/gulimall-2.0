@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GulimallAuthServerApplicationTests {
+public class AuthServerApplicationTests {
 
 
     @Test

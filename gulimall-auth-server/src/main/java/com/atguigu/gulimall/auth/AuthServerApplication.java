@@ -14,10 +14,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.atguigu.gulimall.auth.feignn"})
 @EnableRedisHttpSession // 整合redis作为session存储
-public class GulimallAuthServerApplication {
+public class AuthServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GulimallAuthServerApplication.class, args);
+        SpringApplication.run(AuthServerApplication.class, args);
     }
 
 }
