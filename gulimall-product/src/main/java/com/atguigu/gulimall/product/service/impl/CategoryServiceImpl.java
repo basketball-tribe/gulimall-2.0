@@ -24,6 +24,8 @@ import com.atguigu.gulimall.product.dao.CategoryDao;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
 
+import static java.util.Comparator.*;
+
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
@@ -125,9 +127,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                         return categoryEntity;
                     })
                     .sorted(
-                            (meau1, meau2) -> {
-                                return (meau1.getSort() == null ? 0 : meau1.getSort()) - (meau2.getSort() == null ? 0 : meau2.getSort());
-                            }
+                            comparingInt(meau -> (meau.getSort() == null ? 0 : meau.getSort()))
                     )
                     .collect(Collectors.toList());
             cache.put("categoryEntities", level1Menus);
@@ -151,9 +151,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     return categoryEntity;
                 })
                 .sorted(
-                        (meau1, meau2) -> {
-                            return (meau1.getSort() == null ? 0 : meau1.getSort()) - (meau2.getSort() == null ? 0 : meau2.getSort());
-                        }
+                        comparingInt(meau -> (meau.getSort() == null ? 0 : meau.getSort()))
                 )
                 .collect(Collectors.toList());
         return level1Menus;
@@ -243,9 +241,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             categoryEntity.setChildren(getChildrens(categoryEntity, all));
             return categoryEntity;
         }).sorted(
-                (meau1, meau2) -> {
-                    return (meau1.getSort() == null ? 0 : meau1.getSort()) - (meau2.getSort() == null ? 0 : meau2.getSort());
-                }
+                comparingInt(meau -> (meau.getSort() == null ? 0 : meau.getSort()))
         ).collect(Collectors.toList());
         return children;
     }
