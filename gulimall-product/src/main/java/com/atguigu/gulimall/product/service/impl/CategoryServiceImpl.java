@@ -6,6 +6,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.atguigu.gulimall.product.vo.Catalog2Vo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -181,9 +182,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 //        System.out.println("查询一级菜单时间:"+(System.currentTimeMillis()-start));
         return parent_cid;
     }
-
+    @Cacheable(cacheNames = {"category"}, key = "#root.methodName")
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJsonDbWithSpringCache() {
+        System.out.println("查询了数据库");
         return getCategoriesDb();
     }
 
@@ -235,7 +237,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private List<CategoryEntity> getChildrens(CategoryEntity root, List<CategoryEntity> all) {
         List<CategoryEntity> children = all.stream().filter(
                 //父类的catId作为子类的parentCid
-                categoryEntity -> categoryEntity.getParentCid() == root.getCatId()
+                categoryEntity -> categoryEntity.getParentCid().equals(root.getCatId())
         ).map(categoryEntity -> {
             //将总数和本次要查询的数据(主要是为了获取到本类的id作为子类的父级id)存入需要递归的方法中
             categoryEntity.setChildren(getChildrens(categoryEntity, all));
