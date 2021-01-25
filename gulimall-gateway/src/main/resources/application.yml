@@ -81,6 +81,44 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>/?.*), /renren-fast/$\{segment}
 
+#        #将主机地址为search.gulimall.com转发至gulimall-search
+#        - id: gulimall_serach_host
+#          uri: lb://gulimall-search
+#          predicates:
+#            - Host=search.fengjcgulimall.top
+#
+#        #将主机地址为auth.gulimall.com转发至gulimall-auth
+#        - id: gulimall_auth_host
+#          uri: lb://gulimall-auth-server
+#          predicates:
+#            - Host=auth.fengjcgulimall.top
+#
+#
+#        #将主机地址为search.gulimall.com转发至gulimall-search
+#        - id: gulimall_cart_host
+#          uri: lb://gulimall-cart
+#          predicates:
+#            - Host=cart.fengjcgulimall.top
+#
+#        #将主机地址为order.gulimall.com转发至gulimall-order
+#        - id: gulimall_order_host
+#          uri: lb://gulimall-order
+#          predicates:
+#            - Host=order.fengjcgulimall.top
+#
+#        #将主机地址为seckill.gulimall.com转发至gulimall-seckill
+#        - id: gulimall_seckill_host
+#          uri: lb://gulimall-seckill
+#          predicates:
+#            - Host=seckill.fengjcgulimall.top
+#
+#        #将主机地址为**.gulimall.com转发至gulimall-product
+#        - id: gulimall_host
+#          uri: lb://gulimall-product
+#          predicates:
+#            - Host=**.fengjcgulimall.top
+
+
         #将主机地址为search.gulimall.com转发至gulimall-search
         - id: gulimall_serach_host
           uri: lb://gulimall-search
@@ -117,6 +155,7 @@ spring:
           uri: lb://gulimall-product
           predicates:
             - Host=**.gulimall.com
+
 
   ## 前端项目，/api
 ## http://localhost:88/api/captcha.jpg   http://localhost:8080/renren-fast/captcha.jpg
