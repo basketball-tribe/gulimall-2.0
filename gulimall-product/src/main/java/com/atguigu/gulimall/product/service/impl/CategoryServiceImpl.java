@@ -91,7 +91,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 String categoryEntities2 = redisTemplate.opsForValue().get("categoryEntities");
                 if (StringUtils.isEmpty(categoryEntities2)) {
                     List<CategoryEntity> categoryEntitiesResult2 = listWithTreeFromDB2();
-                    redisTemplate.opsForValue().set("categoryEntities", JSON.toJSONString(categoryEntitiesResult2));
+                    redisTemplate.opsForValue().set("categoryEntities", JSON.toJSONString(categoryEntitiesResult2),20,TimeUnit.SECONDS);
                     return categoryEntitiesResult2;
                 } else {
                     List<CategoryEntity> categoryEntitiesResult3 = JSON.parseObject(categoryEntities2, new TypeReference<List<CategoryEntity>>() {
@@ -145,7 +145,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         List<CategoryEntity> entities = baseMapper.selectList(null);
         //递归查询子分类
         List<CategoryEntity> level1Menus = entities.stream().filter(categoryEntity ->
-                categoryEntity.getParentCid() == 0)
+                  categoryEntity.getParentCid() == 0 && categoryEntity.getShowStatus()!=0)
                 .map(categoryEntity -> {
                     //将总数和本次要查询的数据(主要是为了获取到本类的id作为子类的父级id)存入需要递归的方法中
                     categoryEntity.setChildren(getChildrens(categoryEntity, entities));
@@ -164,6 +164,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //逻辑删除
         baseMapper.deleteBatchIds(asList);
+        String categoryEntities1 = redisTemplate.opsForValue().get("categoryEntities");
+        if(!StringUtils.isEmpty(categoryEntities1)){
+            redisTemplate.delete(categoryEntities1);
+        }
+        System.out.println("已经删除");
     }
 
     @Override
@@ -187,6 +192,24 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public Map<String, List<Catalog2Vo>> getCatalogJsonDbWithSpringCache() {
         System.out.println("查询了数据库");
         return getCategoriesDb();
+    }
+
+    @Override
+    public void saveCateGory(CategoryEntity category) {
+        this.save(category);
+        String categoryEntities1 = redisTemplate.opsForValue().get("categoryEntities");
+        if(!StringUtils.isEmpty(categoryEntities1)){
+            redisTemplate.delete(categoryEntities1);
+        }
+    }
+
+    @Override
+    public void updateByCateGoryId(CategoryEntity category) {
+        this.updateById(category);
+        String categoryEntities1 = redisTemplate.opsForValue().get("categoryEntities");
+        if(!StringUtils.isEmpty(categoryEntities1)){
+            redisTemplate.delete(categoryEntities1);
+        }
     }
 
     //从数据库中查出三级分类

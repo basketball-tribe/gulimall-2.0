@@ -64,7 +64,7 @@ public class CategoryController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody CategoryEntity category){
-		categoryService.save(category);
+		categoryService.saveCateGory(category);
 
         return R.ok();
     }
@@ -74,7 +74,7 @@ public class CategoryController {
      */
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+		categoryService.updateByCateGoryId(category);
 
         return R.ok();
     }
